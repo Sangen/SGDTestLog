@@ -1,0 +1,20 @@
+PODS:
+  - Nimble (3.1.0)
+  - Quick (0.8.0)
+  - SGDTestLog (0.0.2)
+
+DEPENDENCIES:
+  - Nimble
+  - Quick
+  - SGDTestLog (from `.`)
+
+EXTERNAL SOURCES:
+  SGDTestLog:
+    :path: "."
+
+SPEC CHECKSUMS:
+  Nimble: 79d40f4d69d47314229bbabacaa02b8838c779b9
+  Quick: 563d0f6ec5f72e394645adb377708639b7dd38ab
+  SGDTestLog: 5a21752149dc4aa28689fc8d7b82cd8803dd3210
+
+COCOAPODS: 0.39.0
