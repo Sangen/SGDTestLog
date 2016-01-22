@@ -6,11 +6,11 @@ PODS:
 DEPENDENCIES:
   - Nimble
   - Quick
-  - SGDTestLog (from `.`)
+  - SGDTestLog (from `..`)
 
 EXTERNAL SOURCES:
   SGDTestLog:
-    :path: "."
+    :path: ".."
 
 SPEC CHECKSUMS:
   Nimble: 79d40f4d69d47314229bbabacaa02b8838c779b9

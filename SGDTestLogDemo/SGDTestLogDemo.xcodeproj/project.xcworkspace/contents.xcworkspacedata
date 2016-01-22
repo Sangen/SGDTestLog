@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:SGDTestLog.xcodeproj">
+      location = "self:SGDTestLogDemo.xcodeproj">
    </FileRef>
 </Workspace>

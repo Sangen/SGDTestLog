@@ -1,0 +1,13 @@
+platform :ios, '8.0'
+use_frameworks!
+
+target 'SGDTestLogDemo' do
+
+end
+
+target 'SGDTestLogDemoTests' do
+    pod 'SGDTestLog', :path => '..'
+    pod 'Quick'
+    pod 'Nimble'
+end
+

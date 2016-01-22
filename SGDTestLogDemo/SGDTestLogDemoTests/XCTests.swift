@@ -1,6 +1,6 @@
 //
 //  XCTests.swift
-//  SGDTestLog
+//  SGDTestLogDemo
 //
 //  Created by Sangen on 1/21/16.
 //  Copyright © 2016 Sangen. All rights reserved.
@@ -31,10 +31,6 @@ class XCTests: XCTestCase {
 
     func testSuccessSample() {
         XCTAssertTrue(true, "Success")
-    }
-
-    func testPendingSample() {
-//        Pending("Wait to do")
     }
 
 }

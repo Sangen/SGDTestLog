@@ -1,6 +1,6 @@
 //
 //  QuickSpecs.swift
-//  SGDTestLogExample
+//  SGDTestLogDemo
 //
 //  Created by Sangen on 1/21/16.
 //  Copyright © 2016 Sangen. All rights reserved.
@@ -12,8 +12,6 @@ import Nimble
 
 class QuickSpecs: QuickSpec {
     override func spec() {
-        beforeSuite() {
-        }
 
         it("succeed it") {
             expect([1, 2, 3, 4, 5]) == [1, 2, 3, 4, 5]
