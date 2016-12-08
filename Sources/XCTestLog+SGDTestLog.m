@@ -29,7 +29,7 @@ NSString *const kPassedIcon = @"✅";
 NSString *const kFailedIcon = @"❌";
 NSString *const kFailedLineIcon = @"🚩";
 NSString *const kSeparatorIcon = @" ‣ ";
-NSString *const kTestRowFormat = @"%@ %@] %@ (%@s)\n";
+NSString *const kTestRowFormat = @"%@ %@]  %@ (%@s)\n";
 NSString *const kFailedFormat = @"\t%@Line %@: %@\n";
 
 
@@ -81,9 +81,10 @@ NSString *const kFailedFormat = @"\t%@Line %@: %@\n";
         NSString *icon = [log.uppercaseString isEqualToString:kXCTestPassed] ? kPassedIcon : kFailedIcon;
         NSString *messenger = methodParts[0];
         NSString *methodWithUScore = [methodParts[1] stringByReplacingOccurrencesOfString: @"]" withString: @""];
-        NSString *mLevel1 = [methodWithUScore stringByReplacingOccurrencesOfString: @"___" withString: kSeparatorIcon];
-        NSString *mLevel2 = [mLevel1 stringByReplacingOccurrencesOfString: @"__" withString: kSeparatorIcon];
-        NSString *method = [mLevel2 stringByReplacingOccurrencesOfString: @"_" withString: @" "];
+        NSString *mLevel1 = [methodWithUScore stringByReplacingOccurrencesOfString: @"____" withString: kSeparatorIcon];
+        NSString *mLevel2 = [mLevel1 stringByReplacingOccurrencesOfString: @"___" withString: kSeparatorIcon];
+        NSString *mLevel3 = [mLevel2 stringByReplacingOccurrencesOfString: @"__" withString: kSeparatorIcon];
+        NSString *method = [mLevel3 stringByReplacingOccurrencesOfString: @"_" withString: @" "];
         NSString *output = [NSString stringWithFormat: kTestRowFormat, icon, messenger, method, time];
 
         printf("%s", output.UTF8String);
