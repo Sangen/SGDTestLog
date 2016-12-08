@@ -11,22 +11,11 @@
 #import <objc/message.h>
 #import <stdarg.h>
 
-#define CLR_BEG "\033[fg"
-#define CLR_END "\033[;"
-#define CLR_WHT "239,239,239"
-#define CLR_GRY "150,150,150"
-#define CLR_WOW "241,196,15"
-#define CLR_GRN "46,204,113"
-#define CLR_RED "211,84,0"
-
 NSString *const kRGTestCaseFormat = @"%@: %s (%.3fs)";
 NSString *const kXCTestCaseFormat = @"Test Case '%@' %s (%.3f seconds).\n";
 NSString *const kXCTestSuiteStartFormat = @"Test Suite '%@' started at %@\n";
 NSString *const kXCTestSuiteFinishFormat  = @"Test Suite '%@' finished at %@.\n";
-//*const kXCTestSuiteFinishLongFormat	= @"Test Suite '%@' finished at %@.\n"
-//"Executed %ld test%s, with %ld failure%s (%ld unexpected) in %.3f (%.3f) seconds\n";
 NSString *const kXCTestSuiteFinishLongFormat = @"Test Suite '%@' %s at %@.\n\t Executed %lu test%s, with %lu failure%s (%lu unexpected) in %.3f (%.3f) seconds";
-//= @"Test Suite '%@' %s at %@.\nExecuted %lu test%s, with %lu failure%s (%lu unexpected) in %.3f (%.3f) seconds\n";
 NSString *const kXCTestErrorFormat = @"%@:%lu: error: %@ : %@\n";
 NSString *const kXCTestCaseArgsFormat = @"%@|%s|%.5f";
 NSString *const kXCTestErrorArgsFormat = @"%@|%lu|%@|%@";
@@ -35,11 +24,13 @@ NSString *const kRGArgsSeparator = @"|";
 NSString *const kXCTestPassed   = @"PASSED";
 NSString *const kXCTTestFailed  = @"FAILED";
 NSString *const kXCTTestPending = @"PENDING";
-NSString *const kRGTestCaseXCOutputFormat 	= @"" CLR_BEG "%@;%@:" 		 CLR_END CLR_BEG CLR_GRY ";%@ " 		CLR_END
-CLR_BEG CLR_WHT ";%@" CLR_END CLR_BEG CLR_GRY ";] (%@s)" CLR_END "\n";
-NSString *const kRGTestCaseOutputFormat 		= @"%@: %@ (%@s)\n";
-NSString *const kRGTestErrorXCOutputFormat 	= @"\t\033[fg%@;Line %@: %@\033[;\n";
-NSString *const kRGTestErrorOutputFormat 		= @"\tLine %@: %@\n";
+
+NSString *const kPassedIcon = @"✅";
+NSString *const kFailedIcon = @"❌";
+NSString *const kFailedLineIcon = @"🚩";
+NSString *const kSeparatorIcon = @" ‣ ";
+NSString *const kTestRowFormat = @"%@ %@] %@ (%@s)\n";
+NSString *const kFailedFormat = @"\t%@Line %@: %@\n";
 
 
 @implementation XCTestCase (SGDTestLog)
@@ -54,7 +45,7 @@ NSString *const kRGTestErrorOutputFormat 		= @"\tLine %@: %@\n";
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @implementation XCTestLog (SGDTestLog)
 #pragma clang diagnostic pop
-// end
+    // end
 
 + (void)load {
     method_exchangeImplementations(class_getInstanceMethod(self, @selector(testLogWithFormat:)),
@@ -87,12 +78,13 @@ NSString *const kRGTestErrorOutputFormat 		= @"\tLine %@: %@\n";
         NSArray *methodParts = [args[0] componentsSeparatedByString:@" "];
         NSString *log = args[1];
         NSString *time = args[2];
-        NSString *color = [NSString stringWithUTF8String:[log.uppercaseString isEqualToString:kXCTestPassed] ? CLR_GRN : CLR_RED];
+        NSString *icon = [log.uppercaseString isEqualToString:kXCTestPassed] ? kPassedIcon : kFailedIcon;
         NSString *messenger = methodParts[0];
-        NSString *method = [methodParts[1] stringByReplacingOccurrencesOfString:@"]" withString:@""];
-        NSString *output = [self.class isXcodeColorsEnabled]
-        ? [NSString stringWithFormat:kRGTestCaseXCOutputFormat, color, log.uppercaseString, messenger, method, time]
-        : [NSString stringWithFormat:kRGTestCaseOutputFormat, log.uppercaseString, args[0], time];
+        NSString *methodWithUScore = [methodParts[1] stringByReplacingOccurrencesOfString: @"]" withString: @""];
+        NSString *mLevel1 = [methodWithUScore stringByReplacingOccurrencesOfString: @"___" withString: kSeparatorIcon];
+        NSString *mLevel2 = [mLevel1 stringByReplacingOccurrencesOfString: @"__" withString: kSeparatorIcon];
+        NSString *method = [mLevel2 stringByReplacingOccurrencesOfString: @"_" withString: @" "];
+        NSString *output = [NSString stringWithFormat: kTestRowFormat, icon, messenger, method, time];
 
         printf("%s", output.UTF8String);
 
@@ -101,23 +93,11 @@ NSString *const kRGTestErrorOutputFormat 		= @"\tLine %@: %@\n";
         [self.class.errors enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { printf("%s\n", [obj UTF8String]); }];
         [self.class.errors removeAllObjects];
 
-    } else if ([format isEqualToString:kXCTestErrorFormat]){
+    } else if ([format isEqualToString:kXCTestErrorFormat]) {
         NSArray *args = [[NSString.alloc initWithFormat:kXCTestErrorArgsFormat arguments:arguments] componentsSeparatedByString:kRGArgsSeparator];
 
-        [self.class.errors addObject: ![self.class isXcodeColorsEnabled] ? [NSString stringWithFormat:kRGTestErrorOutputFormat, args[1], args[3]] : ^{
-            NSInteger failureLoc;
-            if ((failureLoc = [args[3] rangeOfString:@"failed"].location) == NSNotFound) {
-                return [NSString stringWithFormat:kRGTestErrorXCOutputFormat,[NSString stringWithUTF8String:CLR_RED], args[1], args[3]];
-            }
-
-            NSString *problem = [args[3] substringToIndex:failureLoc];
-            NSString *reason = [args[3] substringFromIndex:failureLoc + @"failed ".length];
-
-            return [NSString stringWithFormat:@"%@%@%@",
-                    [NSString stringWithFormat:@"" CLR_BEG CLR_WOW ";#%@" CLR_END, @(self.class.errors.count+1).stringValue],
-                    [NSString stringWithFormat:@"%@" CLR_BEG CLR_GRY ";@%@" CLR_END, self.class.errors.count < 10 ? @" ":@"", args[1]],
-                    [NSString stringWithFormat:@"" CLR_BEG CLR_WHT ";  %@ "CLR_END CLR_BEG CLR_RED ";%@" CLR_END, problem, reason]];
-        }()];
+        NSString *output = [NSString stringWithFormat:kFailedFormat, kFailedLineIcon, args[1], args[3]];
+        [self.class.errors addObject: output];
     }
     va_end(arguments);
 }
