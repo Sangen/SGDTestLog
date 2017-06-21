@@ -1,7 +1,7 @@
 PODS:
-  - Nimble (5.1.1)
-  - Quick (1.0.0)
-  - SGDTestLog (0.1.0)
+  - Nimble (7.0.1)
+  - Quick (1.1.0)
+  - SGDTestLog (0.1.1)
 
 DEPENDENCIES:
   - Nimble
@@ -13,10 +13,10 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  Nimble: 415e3aa3267e7bc2c96b05fa814ddea7bb686a29
-  Quick: 8024e4a47e6cc03a9d5245ef0948264fc6d27cff
-  SGDTestLog: 5f5271e94b1d31c29c5ed2e50a8420638b1f8d0a
+  Nimble: 657d000e11df8aebe27cdaf9d244de7f30ed87f7
+  Quick: dafc587e21eed9f4cab3249b9f9015b0b7a7f71d
+  SGDTestLog: caf10e2f4179a71651f777ac10473d9c0437fb8d
 
-PODFILE CHECKSUM: 62680e05d86a9f67ba608bfc08192e10e223f660
+PODFILE CHECKSUM: b1c8797ec27ed25ee90f4d14e6eab758a34648d3
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.1
